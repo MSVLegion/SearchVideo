@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <CheckBoxPreference
+        android:key="recent"
+        android:summary="@string/suggestions_description"
+        android:title="@string/suggestions_pref" >
+    </CheckBoxPreference>
+    
+    <CheckBoxPreference
+        android:key="last"
+        android:summary="@string/startup_description"
+        android:title="@string/startup_result" >
+    </CheckBoxPreference>
+
+</PreferenceScreen>
