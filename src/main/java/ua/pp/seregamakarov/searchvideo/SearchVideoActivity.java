@@ -14,21 +14,23 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.SearchRecentSuggestions;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.content.CursorLoader;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Window;
 
-public class SearchVideoActivity extends FragmentActivity implements  OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class SearchVideoActivity extends SherlockFragmentActivity implements  OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 	
 	final String LOG_TAG = "mainActivity";
 	final Uri VIDEOS_URI = Uri
@@ -67,7 +69,6 @@ public class SearchVideoActivity extends FragmentActivity implements  OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
-
         init();
         handleIntent(getIntent());
         try {
@@ -144,8 +145,8 @@ public class SearchVideoActivity extends FragmentActivity implements  OnClickLis
 	  				searchManager.setQuery(query);
 	  				searchManager.setSearchMap(map);
 	  				
-	  				mHeaderText = (TextView) findViewById(R.id.header_text);
-	  				mHeaderText.setText(R.string.search_wait);
+	  				//mHeaderText = (TextView) findViewById(R.id.header_text);
+	  				//mHeaderText.setText(R.string.search_wait);
 	  				
 	  				mProgress = (ProgressBar) findViewById(R.id.progress_bar);
 	  				searchCount = map.size();
@@ -187,7 +188,7 @@ public class SearchVideoActivity extends FragmentActivity implements  OnClickLis
     }
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
+		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.options_menu, menu);
 		return true;
 	}
@@ -206,12 +207,12 @@ public class SearchVideoActivity extends FragmentActivity implements  OnClickLis
 		}
 	}
 
-	@Override
+	//@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case  R.id.cancel_search:
-				mHeaderText = (TextView) findViewById(R.id.header_text);
-				mHeaderText.setText(getResources().getString(R.string.stopping_searching));
+				//mHeaderText = (TextView) findViewById(R.id.header_text);
+				//mHeaderText.setText(getResources().getString(R.string.stopping_searching));
 				searchManager.serviceShutdown();
 				break;
 		}
@@ -225,15 +226,15 @@ public class SearchVideoActivity extends FragmentActivity implements  OnClickLis
 		mStopButton = (ImageButton) findViewById(R.id.cancel_search);
 		mStopButton.setVisibility(View.GONE);
 		
-		mHeaderText = (TextView) findViewById(R.id.header_text);
-		mHeaderText.setText(getResources().getString(R.string.search_instructions));
+		//mHeaderText = (TextView) findViewById(R.id.header_text);
+		//mHeaderText.setText(getResources().getString(R.string.search_instructions));
 		
 		Toast toast = Toast.makeText(this, R.string.search_completed, Toast.LENGTH_SHORT);
 		toast.show();
 		showResultCount();
 	}
 
-	@Override
+	//@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
 		Uri baseUri;
 		baseUri = VIDEOS_URI;
@@ -242,12 +243,12 @@ public class SearchVideoActivity extends FragmentActivity implements  OnClickLis
 					null, null, null, null);
 	}
 
-	@Override
+	//@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		mAdapter.changeCursor(cursor);
 	}
 
-	@Override
+	//@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
 		mAdapter.changeCursor(null);
 	}

@@ -6,7 +6,13 @@
         android:summary="@string/suggestions_description"
         android:title="@string/suggestions_pref" >
     </CheckBoxPreference>
-    
+
+    <Preference
+            android:key="pref_clear_recent"
+            android:dependency="recent"
+            android:summary="@string/clear_recent"
+            android:title="@string/clear_recent" />
+
     <CheckBoxPreference
         android:key="last"
         android:summary="@string/startup_description"

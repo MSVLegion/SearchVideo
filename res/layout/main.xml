@@ -12,23 +12,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/header_text"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="#353132"
-            android:padding="5dp"
-            android:text="@string/search_instructions"
-            android:textColor="?android:textColorPrimary"
-            android:textSize="17sp" />
          
          <ImageButton
              android:id="@+id/cancel_search"
              android:layout_width="23dp"
              android:layout_height="20dp"
              android:layout_alignParentRight="true"
-             android:layout_below="@id/header_text"
+
              android:background="#353132"
              android:baselineAlignBottom="true"
              android:contentDescription="@string/cancel_search"

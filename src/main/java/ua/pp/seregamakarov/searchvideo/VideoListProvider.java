@@ -100,11 +100,11 @@ public class VideoListProvider extends ContentProvider {
 		
 	    switch (uriMatcher.match(uri)) {
 		    case URI_VIDEOS:
-		      Log.d(LOG_TAG, "URI_CONTACTS");
+		      Log.d(LOG_TAG, "URI_VIDEOS");
 		      break;
 		    case URI_VIDEOS_ID:
 		      String id = uri.getLastPathSegment();
-		      Log.d(LOG_TAG, "URI_CONTACTS_ID, " + id);
+		      Log.d(LOG_TAG, "URI_VIDEOS_ID, " + id);
 		      if (TextUtils.isEmpty(selection)) {
 		        selection = KEY_ROWID + " = " + id;
 		      } else {
