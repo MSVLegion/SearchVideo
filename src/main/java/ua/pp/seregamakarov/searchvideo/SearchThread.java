@@ -17,7 +17,6 @@ public class SearchThread implements Runnable {
 		return model;
 	}
 
-	@Override
 	public void run() {
 		try {
 			model.getResults();
@@ -26,5 +25,4 @@ public class SearchThread implements Runnable {
 		}
 		Thread.currentThread().interrupt();
 	}
-
 }

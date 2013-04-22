@@ -1,22 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <CheckBoxPreference
-        android:key="recent"
-        android:summary="@string/suggestions_description"
-        android:title="@string/suggestions_pref" >
-    </CheckBoxPreference>
-
-    <Preference
-            android:key="pref_clear_recent"
-            android:dependency="recent"
-            android:summary="@string/clear_recent"
-            android:title="@string/clear_recent" />
-
-    <CheckBoxPreference
-        android:key="last"
-        android:summary="@string/startup_description"
-        android:title="@string/startup_result" >
-    </CheckBoxPreference>
-
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+            android:title="@string/pref_recent_storage_title"
+            android:key="cat_recent_storage">
+        <CheckBoxPreference
+            android:key="recent"
+            android:title="@string/pref_suggestions"
+            android:summary="@string/pref_suggestions_description"
+            android:defaultValue="true" >
+        </CheckBoxPreference>
+        <Preference
+                android:key="pref_clear_recent"
+                android:dependency="recent"
+                android:title="@string/pref_recent"
+                android:summary="@string/pref_clear_recent" />
+    </PreferenceCategory>
+    <PreferenceCategory
+            android:title="@string/pref_search_title"
+            android:key="cat_search">
+        <CheckBoxPreference
+                android:key="last"
+                android:title="@string/pref_startup_result"
+                android:summary="@string/pref_startup_description"
+                android:defaultValue="true" >
+        </CheckBoxPreference>
+        <PreferenceScreen
+                android:key="pref_search_services_key"
+                android:title="@string/pref_search_services"
+                android:persistent="false" >
+            <CheckBoxPreference
+                    android:key="pref_service_youtube_key"
+                    android:title="@string/pref_search_service_youtube"
+                    android:defaultValue="true" >
+            </CheckBoxPreference>
+            <CheckBoxPreference
+                    android:key="pref_service_yahoo_key"
+                    android:title="@string/pref_search_service_yahoo"
+                    android:defaultValue="true" >
+            </CheckBoxPreference>
+        </PreferenceScreen>
+    </PreferenceCategory>
 </PreferenceScreen>

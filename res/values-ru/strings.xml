@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Поиск видео</string>
+    <string name="search_hint">Видеопоиск</string>
+    <string name="settings_description">Поиск видео в интернете</string>
+    <string name="no_records">Нет результатов</string>
+    <plurals name="search_results">
+        <item quantity="one">%1$d результат для \"%2$s\" </item>
+        <item quantity="other">%1$d результатов для \"%2$s\" </item>
+    </plurals>
+    <string name="menu_search">Поиск</string>
+    <string name="menu_settings">Настройки</string>
+    <string name="cancel_search">Прекратить поиск</string>
+    <string name="yes">Да</string>
+    <string name="cancel">Отмена</string>
+    <string name="yahoo">yahoo</string>
+    <string name="youtube">youtube</string>
+    <string name="wait_or_stop">Дождитесь завершение или остановите поиск</string>
+    <string name="search_completed">Поиск завершен</string>
+    <string name="num_results">%1$d видео</string>
+    <string name="progress_percent">%1$d%%</string>
+    <string name="preferences">Предпочтения</string>
+    <string name="pref_suggestions_description">Включить сохранение поисковых запросов</string>
+    <string name="pref_suggestions">Поисковые запросы</string>
+    <string name="pref_recent">Очистить историю поиска</string>
+    <string name="pref_clear_recent">Нажмите для удаления истории поисковых запросов</string>
+    <string name="pref_recent_storage_title">ХРАНЕНИЕ</string>
+    <string name="pref_search_title">ПОИСК</string>
+    <string name="pref_startup_result">Последние результаты</string>
+    <string name="pref_startup_description">Показывать последние результаты поиска при запуске</string>
+    <string name="pref_search_services">Поисковые сервисы</string>
+    <string name="pref_search_service_youtube">YouTube</string>
+    <string name="pref_search_service_yahoo">Yahoo!</string>
+    <string name="info_not_selected_search_service">Не выбраны сервисы поиска</string>
+</resources>

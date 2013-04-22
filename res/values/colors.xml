@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="def_selected_icon">#08D7FF</color>
+    <color name="def_icon">#FAFAFA</color>
+    <color name="progress_background">#353132</color>
+</resources>

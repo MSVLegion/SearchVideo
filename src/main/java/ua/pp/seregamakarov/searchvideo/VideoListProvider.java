@@ -164,16 +164,13 @@ public class VideoListProvider extends ContentProvider {
 	    
 		    case URI_VIDEOS:
 		      //Log.d(LOG_TAG, "URI_VIDEOS");
-
 		      if (TextUtils.isEmpty(sortOrder)) {
 		        sortOrder = KEY_ROWID + " ASC";
 		      }
 		      break;
-		      
 		    case URI_VIDEOS_ID:
 		      String id = uri.getLastPathSegment();
 		      //Log.d(LOG_TAG, "URI_VIDEOS_ID, " + id);
-
 		      if (TextUtils.isEmpty(selection)) {
 		        selection = KEY_ROWID + " = " + id;
 		      } else {

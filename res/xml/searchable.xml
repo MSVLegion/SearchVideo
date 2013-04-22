@@ -5,5 +5,4 @@
     android:searchSettingsDescription="@string/settings_description"
     android:searchSuggestAuthority="ua.pp.seregamakarov.searchvideo.SuggestionProvider"
     android:searchSuggestSelection=" ?" >
-
 </searchable>

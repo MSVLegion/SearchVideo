@@ -14,7 +14,6 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.SearchRecentSuggestions;
 import android.util.Log;
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuInflater;
@@ -28,7 +27,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.content.CursorLoader;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Window;
 
 public class SearchVideoActivity extends SherlockFragmentActivity implements  OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 	
@@ -37,28 +35,30 @@ public class SearchVideoActivity extends SherlockFragmentActivity implements  On
 		      .parse("content://ua.pp.seregamakarov.searchvideo.providers.VideoList/videos");
 	private VideoListAdapter mAdapter;
 
-	private MultipleSearch searchManager;
+	private MultipleSearch mMultipleSearch;
 	private ProgressDialog mProgressDialog;
 	private ImageButton mStopButton;
-	private TextView mHeaderText;
+    private View vProgressPanel;
+    private TextView tvNumVideos;
+    private TextView tvProgressPercent;
 	private SharedPreferences preference;
-	
-	private static final int STEP_SIZE = 1;
-	private static final int STEP_COMPLETED = 1;
-	private static final int SEARCH_COMPLETED = 2;
+
 	private boolean activityIsAlive;
 	public int searchCount = -1;
+    private int numFoundVideo = 0;
+    private int progressSize = 100;
+    private int currStep = 0;
 	private ProgressBar mProgress;
     private Handler mHandler;
 	
-    VideoListFragment videoListFragment;
+    VideoListFragment mVideoListFragment;
     
 	@Override
 	protected void onDestroy() {
 		Log.i("Activity, ", "onDestroy()");
 		activityIsAlive = false;
 		if (searchCount>0) {
-			searchManager.serviceShutdown();
+			mMultipleSearch.serviceShutdown();
 		}
 		super.onDestroy();
 	}
@@ -71,18 +71,12 @@ public class SearchVideoActivity extends SherlockFragmentActivity implements  On
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
         init();
         handleIntent(getIntent());
-        try {
-        	if (preference.getBoolean("last", false)) {
-        		showResults();
-            }
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
     }
     
 	private void init() {
 		
-		videoListFragment = (VideoListFragment) getSupportFragmentManager().findFragmentById(R.id.frgmList);
+		mVideoListFragment = (VideoListFragment) getSupportFragmentManager().findFragmentById(R.id.frgmList);
 		
 		activityIsAlive = true;
 		mStopButton = (ImageButton) findViewById(R.id.cancel_search);
@@ -94,24 +88,39 @@ public class SearchVideoActivity extends SherlockFragmentActivity implements  On
 		mProgressDialog.setIndeterminate(true);
 		mProgressDialog.setCancelable(true);
 		
-		searchManager = new MultipleSearch(this);
+		mMultipleSearch = new MultipleSearch(this);
 		
 		mHandler = new Handler() {
-	      public void handleMessage(android.os.Message msg) {
-	    	  switch (msg.what) {
-	          case STEP_COMPLETED:
-	  			mProgress = (ProgressBar) findViewById(R.id.progress_bar);
-	        	mProgress.incrementProgressBy(STEP_SIZE);
-	            break;
-	          case SEARCH_COMPLETED:
-	        	searchCount--;
-	        	if ((searchCount==0)&(activityIsAlive)) {
-	        		endOfSearch();
-	        	}
-	            break;
-	          }
-	      };
+            public void handleMessage(android.os.Message msg) {
+                switch (msg.what) {
+                    case Search.ITEM_COMPLETED:
+                        numFoundVideo++;
+                        tvNumVideos = (TextView) findViewById(R.id.download_count);
+                        tvNumVideos.setText(String.format(getResources().getString(R.string.num_results), numFoundVideo));
+                        break;
+                    case Search.STEP_COMPLETED:
+                        currStep++;
+                        mProgress = (ProgressBar) findViewById(R.id.progress_bar);
+                        mProgress.incrementProgressBy(Search.PROGRESS_BAR_STEP_SIZE);
+                        tvProgressPercent = (TextView) findViewById(R.id.download_percent);
+                        tvProgressPercent.setText(String.format(getResources().getString(R.string.progress_percent), (int) (100. / progressSize * currStep)));
+                        break;
+                    case Search.SEARCH_COMPLETED:
+                        searchCount--;
+                        if ((searchCount==0)&(activityIsAlive)) {
+                            endOfSearch();
+                        }
+                        break;
+                }
+            };
 	    };
+        try {
+            if (preference.getBoolean("last", false)) {
+                showResults();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 	}
     
 	@Override
@@ -135,31 +144,45 @@ public class SearchVideoActivity extends SherlockFragmentActivity implements  On
 	            	suggestions.saveRecentQuery(query, null);
 	            }
 	  			
-	  			try { 				
-	  				clearTable();
+	  			try {
 
-	  				HashMap<String, SearchModel> map = new HashMap<String, SearchModel>();
-	  				map.put("youtubeSearch", new YoutubeSearchModel(mHandler, this));
-	  				map.put("yahooSearch", new YahooSearchModel(mHandler, this));
-	
-	  				searchManager.setQuery(query);
-	  				searchManager.setSearchMap(map);
-	  				
-	  				//mHeaderText = (TextView) findViewById(R.id.header_text);
-	  				//mHeaderText.setText(R.string.search_wait);
-	  				
-	  				mProgress = (ProgressBar) findViewById(R.id.progress_bar);
-	  				searchCount = map.size();
-	  				mProgress.setProgress(0);
-	  				mProgress.setMax(searchCount*getResources().getInteger(R.integer.searchPagesCount));    				
-	  				mProgress.setVisibility(View.VISIBLE);
-	  				
-	  				mStopButton = (ImageButton) findViewById(R.id.cancel_search);
-	  				mStopButton.setVisibility(View.VISIBLE);
-	  				
-	  				showResults();
-                    searchManager.run();
-	  				
+                    HashMap<String, SearchModel> searchMap = new HashMap<String, SearchModel>();
+                    if (preference.getBoolean("pref_service_youtube_key", true)) {
+                        searchMap.put("youtubeSearch", new YoutubeSearchModel(mHandler, this));
+                    }
+                    if (preference.getBoolean("pref_service_yahoo_key", true)) {
+                        searchMap.put("yahooSearch", new YahooSearchModel(mHandler, this));
+                    }
+                    searchCount = searchMap.size();
+                    if (searchCount>0) {
+                        clearTable();
+                        mMultipleSearch.setQuery(query);
+                        mMultipleSearch.setSearchMap(searchMap);
+
+                        numFoundVideo = 0;
+                        tvNumVideos = (TextView) findViewById(R.id.download_count);
+                        tvNumVideos.setText(String.format(getResources().getString(R.string.num_results), numFoundVideo));
+
+                        mProgress = (ProgressBar) findViewById(R.id.progress_bar);
+                        mProgress.setProgress(0);
+                        progressSize = searchCount*Search.NUMBER_OF_PAGE;
+                        mProgress.setMax(progressSize);
+                        currStep = 0;
+
+                        tvProgressPercent = (TextView) findViewById(R.id.download_percent);
+                        tvProgressPercent.setText(String.format(getResources().getString(R.string.progress_percent), 0));
+                        //mProgress.setVisibility(View.VISIBLE);
+                        //mStopButton = (ImageButton) findViewById(R.id.cancel_search);
+                        //mStopButton.setVisibility(View.VISIBLE);
+
+                        vProgressPanel = findViewById(R.id.progress_panel);
+                        vProgressPanel.setVisibility(View.VISIBLE);
+                        showResults();
+                        mMultipleSearch.run();
+                    } else {
+                        Toast toast = Toast.makeText(this, getResources().getString(R.string.info_not_selected_search_service), Toast.LENGTH_LONG);
+                        toast.show();
+                    }
 	  			} catch (Exception e) {
 	  				e.printStackTrace();
 	  			}
@@ -174,7 +197,7 @@ public class SearchVideoActivity extends SherlockFragmentActivity implements  On
 		mAdapter = new VideoListAdapter(this,
 				R.layout.record, null, from, to);
 
-		videoListFragment.setListAdapter(mAdapter);
+		mVideoListFragment.setListAdapter(mAdapter);
 		getSupportLoaderManager().initLoader(0, null, this);   
 	}
 
@@ -211,24 +234,15 @@ public class SearchVideoActivity extends SherlockFragmentActivity implements  On
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case  R.id.cancel_search:
-				//mHeaderText = (TextView) findViewById(R.id.header_text);
-				//mHeaderText.setText(getResources().getString(R.string.stopping_searching));
-				searchManager.serviceShutdown();
+				mMultipleSearch.serviceShutdown();
 				break;
 		}
 		
 	}
 
 	private void endOfSearch() {
-		mProgress = (ProgressBar) findViewById(R.id.progress_bar);
-		mProgress.setVisibility(View.GONE);
-		
-		mStopButton = (ImageButton) findViewById(R.id.cancel_search);
-		mStopButton.setVisibility(View.GONE);
-		
-		//mHeaderText = (TextView) findViewById(R.id.header_text);
-		//mHeaderText.setText(getResources().getString(R.string.search_instructions));
-		
+        vProgressPanel = findViewById(R.id.progress_panel);
+        vProgressPanel.setVisibility(View.GONE);
 		Toast toast = Toast.makeText(this, R.string.search_completed, Toast.LENGTH_SHORT);
 		toast.show();
 		showResultCount();
@@ -238,7 +252,6 @@ public class SearchVideoActivity extends SherlockFragmentActivity implements  On
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
 		Uri baseUri;
 		baseUri = VIDEOS_URI;
-
 		return new CursorLoader(this, baseUri,
 					null, null, null, null);
 	}

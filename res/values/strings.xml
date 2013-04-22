@@ -1,47 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Search Video</string>
-    <string name="search_instructions">Use the search box in the Action Bar to look up a video</string>
     <string name="search_hint">Video search</string>
-    <string name="settings_description">Search videos on the Internet</string>
+    <string name="settings_description">Search for videos on the web</string>
     <string name="no_records">No results</string>
-    <string name="search">Search</string>
+    <plurals name="search_results">
+        <item quantity="one">%1$d result for \"%2$s\" </item>
+        <item quantity="other">%1$d results for \"%2$s\" </item>
+    </plurals>
     <string name="menu_search">Search</string>
     <string name="menu_settings">Settings</string>
-    <plurals name="search_results">
-      <item quantity="one">%1$d result for \"%2$s\" </item>
-      <item quantity="other">%1$d results for \"%2$s\" </item>
-    </plurals>
-    <string name="preferences">Preferences</string>
-    <string name="suggestions_description">Enable retain recent searches</string>
-    <string name="suggestions_pref">Suggestions</string>
-    <string name="clear_recent">Push to clear recent list</string>
     <string name="cancel_search">Cancel</string>
-
-    <style name="ButtonText">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">#ffffff</item>
-        <item name="android:gravity">center</item>
-        <item name="android:layout_margin">3dp</item>
-        <item name="android:textSize">23sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:shadowColor">#000000</item>
-        <item name="android:shadowDx">1</item>
-        <item name="android:shadowDy">1</item>
-        <item name="android:shadowRadius">2</item>
-    </style>
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
     <string name="yahoo">yahoo</string>
     <string name="youtube">youtube</string>
-    <string name="startup_description">Show last search results on startup</string>
-    <string name="startup_result">Show last results</string>
-    <integer name="searchPagesCount">15</integer>
     <string name="wait_or_stop">Wait for the completion or stop the current search</string>
-    <string name="search_wait">Searching.. Please wait..</string>
-    <string name="stopping_searching">Stopping a searching..</string>
     <string name="search_completed">Search completed</string>
-
+    <string name="num_results">%1$d results</string>
+    <string name="progress_percent">%1$d%%</string>
+    <string name="preferences">Preferences</string>
+    <string name="pref_suggestions_description">Enable retain recent searches</string>
+    <string name="pref_suggestions">Suggestions</string>
+    <string name="pref_recent">Clearing the Suggestion Data</string>
+    <string name="pref_clear_recent">Push to clear the recent query suggestions</string>
+    <string name="pref_recent_storage_title">STORAGE</string>
+    <string name="pref_search_title">SEARCH</string>
+    <string name="pref_startup_result">Show last results</string>
+    <string name="pref_startup_description">Show last search results on startup</string>
+    <string name="pref_search_services">Search services</string>
+    <string name="pref_search_service_youtube">YouTube</string>
+    <string name="pref_search_service_yahoo">Yahoo!</string>
+    <string name="info_not_selected_search_service">Not selected search services</string>
 </resources>
