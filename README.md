@@ -18,7 +18,8 @@ page associated with the search result.
 - search results should to be saved in SQLite database (keywords, URLs, headings, and name of a search system replied to a query).
 - the last keywords input by a user should be saved in the user profile (user defaults) and automatically displayed in the search field when search beeing run next time
 ____________________________________
-also added some additional features
+Also added some additional features.
+
 ## License
 
 * [Apache Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
