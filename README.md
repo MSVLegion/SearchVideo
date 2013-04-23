@@ -2,7 +2,7 @@
 
 This is my first app on Android.
 
-!SearchVideoexample](https://raw.github.com/MSVLegion/Screenshots/master/SearchVideo/Preview/search_video_device_both.png)
+![SearchVideoexample](https://raw.github.com/MSVLegion/Screenshots/master/SearchVideo/Preview/search_video_device_both.png)
 
 
 ## License
