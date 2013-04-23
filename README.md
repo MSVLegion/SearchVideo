@@ -19,7 +19,6 @@ page associated with the search result.
 - the last keywords input by a user should be saved in the user profile (user defaults) and automatically displayed in the search field when search beeing run next time
 ____________________________________
 Also added some additional features.
-
 ## License
 
 * [Apache Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
