@@ -14,16 +14,16 @@ import android.content.Context;
 import android.os.Handler;
 
 public class YoutubeSearchModel extends SearchModel {
-	private String searchServiceName = "youtube";
+    private String searchServiceName = "youtube";
     /*private boolean isEntry = false;
     private boolean isEntryTitle = false;*/
     private String title = "";
     private String link = "";
     private boolean failConnection = false;
 
-	public YoutubeSearchModel(Handler handler, Context context) {
-		super(handler, context);
-	}
+    public YoutubeSearchModel(Handler handler, Context context) {
+        super(handler, context);
+    }
 
     /*
     // SAX
@@ -77,12 +77,12 @@ public class YoutubeSearchModel extends SearchModel {
     }
     */
 
-	@Override
-	public void getResults() throws URISyntaxException {
-		String query = getQuery().trim();
-		int offset = 1;
-		int iter = 0;
-		while((iter<getPagesCount())&(!Thread.currentThread().isInterrupted())){
+    @Override
+    public void getResults() throws URISyntaxException {
+        String query = getQuery().trim();
+        int offset = 1;
+        int iter = 0;
+        while((iter<getPagesCount())&(!Thread.currentThread().isInterrupted())){
             try {
                 failConnection = false;
                 while(!checkInternetConn()) {
@@ -134,7 +134,7 @@ public class YoutubeSearchModel extends SearchModel {
                 iter++;
                 stepCompleted();
             }
-		}
-		searchCompleted();
-	}
+        }
+        searchCompleted();
+    }
 }

@@ -29,39 +29,39 @@ import android.support.v4.content.CursorLoader;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class SearchVideoActivity extends SherlockFragmentActivity implements  OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
-	
-	final String LOG_TAG = "mainActivity";
-	final Uri VIDEOS_URI = Uri
-		      .parse("content://ua.pp.seregamakarov.searchvideo.providers.VideoList/videos");
-	private VideoListAdapter mAdapter;
+    
+    final String LOG_TAG = "mainActivity";
+    final Uri VIDEOS_URI = Uri
+              .parse("content://ua.pp.seregamakarov.searchvideo.providers.VideoList/videos");
+    private VideoListAdapter mAdapter;
 
-	private MultipleSearch mMultipleSearch;
-	private ProgressDialog mProgressDialog;
-	private ImageButton mStopButton;
+    private MultipleSearch mMultipleSearch;
+    private ProgressDialog mProgressDialog;
+    private ImageButton mStopButton;
     private View vProgressPanel;
     private TextView tvNumVideos;
     private TextView tvProgressPercent;
-	private SharedPreferences preference;
+    private SharedPreferences preference;
 
-	private boolean activityIsAlive;
-	public int searchCount = -1;
+    private boolean activityIsAlive;
+    public int searchCount = -1;
     private int numFoundVideo = 0;
     private int progressSize = 100;
     private int currStep = 0;
-	private ProgressBar mProgress;
+    private ProgressBar mProgress;
     private Handler mHandler;
-	
+    
     VideoListFragment mVideoListFragment;
     
-	@Override
-	protected void onDestroy() {
-		Log.i("Activity, ", "onDestroy()");
-		activityIsAlive = false;
-		if (searchCount>0) {
-			mMultipleSearch.serviceShutdown();
-		}
-		super.onDestroy();
-	}
+    @Override
+    protected void onDestroy() {
+        Log.i("Activity, ", "onDestroy()");
+        activityIsAlive = false;
+        if (searchCount>0) {
+            mMultipleSearch.serviceShutdown();
+        }
+        super.onDestroy();
+    }
 
     /** Called when the activity is first created. */
     @Override
@@ -71,26 +71,26 @@ public class SearchVideoActivity extends SherlockFragmentActivity implements  On
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
         init();
         handleIntent(getIntent());
-
+    
     }
     
-	private void init() {
-		
-		mVideoListFragment = (VideoListFragment) getSupportFragmentManager().findFragmentById(R.id.frgmList);
-		
-		activityIsAlive = true;
-		mStopButton = (ImageButton) findViewById(R.id.cancel_search);
-		mStopButton.setOnClickListener(this);
+    private void init() {
+        
+        mVideoListFragment = (VideoListFragment) getSupportFragmentManager().findFragmentById(R.id.frgmList);
+        
+        activityIsAlive = true;
+        mStopButton = (ImageButton) findViewById(R.id.cancel_search);
+        mStopButton.setOnClickListener(this);
 
         preference = PreferenceManager.getDefaultSharedPreferences(this);
         
         mProgressDialog = new ProgressDialog(this);
-		mProgressDialog.setIndeterminate(true);
-		mProgressDialog.setCancelable(true);
-		
-		mMultipleSearch = new MultipleSearch(this);
-		
-		mHandler = new Handler() {
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setCancelable(true);
+        
+        mMultipleSearch = new MultipleSearch(this);
+        
+        mHandler = new Handler() {
             public void handleMessage(android.os.Message msg) {
                 switch (msg.what) {
                     case Search.ITEM_COMPLETED:
@@ -113,38 +113,38 @@ public class SearchVideoActivity extends SherlockFragmentActivity implements  On
                         break;
                 }
             };
-	    };
+        };
         try {
-            if (preference.getBoolean("last", false)) {
+            if (preference.getBoolean("last", true)) {
                 showResults();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-	}
+    }
     
-	@Override
-	protected void onNewIntent(Intent intent) {
-		setIntent(intent);
-		handleIntent(intent);
-	}
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleIntent(intent);
+    }
     
     private void handleIntent(Intent intent) {
-    	if (Intent.ACTION_SEARCH.equals(intent.getAction())) { 
-    		if (searchCount>0) {
-    			Toast toast = Toast.makeText(this, getResources().getString(R.string.wait_or_stop), Toast.LENGTH_LONG);
-    			toast.show();
-    		} else {
-	            String query = intent.getStringExtra(SearchManager.QUERY);
-	            
-	            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-	                SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
-	            
-	            if (preference.getBoolean("recent", false)) {
-	            	suggestions.saveRecentQuery(query, null);
-	            }
-	  			
-	  			try {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) { 
+            if (searchCount>0) {
+                Toast toast = Toast.makeText(this, getResources().getString(R.string.wait_or_stop), Toast.LENGTH_LONG);
+                toast.show();
+            } else {
+                String query = intent.getStringExtra(SearchManager.QUERY);
+                
+                SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                    SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
+                
+                if (preference.getBoolean("recent", true)) {
+                    suggestions.saveRecentQuery(query, null);
+                }
+                  
+                  try {
 
                     HashMap<String, SearchModel> searchMap = new HashMap<String, SearchModel>();
                     if (preference.getBoolean("pref_service_youtube_key", true)) {
@@ -183,41 +183,41 @@ public class SearchVideoActivity extends SherlockFragmentActivity implements  On
                         Toast toast = Toast.makeText(this, getResources().getString(R.string.info_not_selected_search_service), Toast.LENGTH_LONG);
                         toast.show();
                     }
-	  			} catch (Exception e) {
-	  				e.printStackTrace();
-	  			}
-    		}
+                  } catch (Exception e) {
+                      e.printStackTrace();
+                  }
+            }
           }
     }
     
     private void showResults() {
-		String[] from = new String[] {VideoListProvider.KEY_TITLE, VideoListProvider.KEY_WEBSITE};
-		int[] to = new int[] { R.id.titleVideo,  R.id.logoImg};
+        String[] from = new String[] {VideoListProvider.KEY_TITLE, VideoListProvider.KEY_WEBSITE};
+        int[] to = new int[] { R.id.titleVideo,  R.id.logoImg};
 
-		mAdapter = new VideoListAdapter(this,
-				R.layout.record, null, from, to);
+        mAdapter = new VideoListAdapter(this,
+                R.layout.record, null, from, to);
 
-		mVideoListFragment.setListAdapter(mAdapter);
-		getSupportLoaderManager().initLoader(0, null, this);   
-	}
+        mVideoListFragment.setListAdapter(mAdapter);
+        getSupportLoaderManager().initLoader(0, null, this);   
+    }
 
     private void clearTable() {
-    	int mRowsDeleted = 0;
-    	mRowsDeleted = getContentResolver().delete(
-    	    VIDEOS_URI,
-    	    null,
-    	    null
-    	);
+        int mRowsDeleted = 0;
+        mRowsDeleted = getContentResolver().delete(
+            VIDEOS_URI,
+            null,
+            null
+        );
     }
-	
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getSupportMenuInflater();
-		inflater.inflate(R.menu.options_menu, menu);
-		return true;
-	}
+    
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        return true;
+    }
 
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case R.id.search:
                 onSearchRequested();
                 return true;
@@ -227,79 +227,79 @@ public class SearchVideoActivity extends SherlockFragmentActivity implements  On
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-		}
-	}
+        }
+    }
 
-	//@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-			case  R.id.cancel_search:
-				mMultipleSearch.serviceShutdown();
-				break;
-		}
-		
-	}
+    //@Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case  R.id.cancel_search:
+                mMultipleSearch.serviceShutdown();
+                break;
+        }
+        
+    }
 
-	private void endOfSearch() {
+    private void endOfSearch() {
         vProgressPanel = findViewById(R.id.progress_panel);
         vProgressPanel.setVisibility(View.GONE);
-		Toast toast = Toast.makeText(this, R.string.search_completed, Toast.LENGTH_SHORT);
-		toast.show();
-		showResultCount();
-	}
+        Toast toast = Toast.makeText(this, R.string.search_completed, Toast.LENGTH_SHORT);
+        toast.show();
+        showResultCount();
+    }
 
-	//@Override
-	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		Uri baseUri;
-		baseUri = VIDEOS_URI;
-		return new CursorLoader(this, baseUri,
-					null, null, null, null);
-	}
+    //@Override
+    public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
+        Uri baseUri;
+        baseUri = VIDEOS_URI;
+        return new CursorLoader(this, baseUri,
+                    null, null, null, null);
+    }
 
-	//@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		mAdapter.changeCursor(cursor);
-	}
+    //@Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        mAdapter.changeCursor(cursor);
+    }
 
-	//@Override
-	public void onLoaderReset(Loader<Cursor> arg0) {
-		mAdapter.changeCursor(null);
-	}
+    //@Override
+    public void onLoaderReset(Loader<Cursor> arg0) {
+        mAdapter.changeCursor(null);
+    }
 
-	public String getVideoURL(long id){
-		  String URL = "";
-		  String[] columnsToTake = { VideoListProvider.KEY_ROWID, VideoListProvider.KEY_URL };
-		  Uri uri = ContentUris.withAppendedId(VIDEOS_URI, id);
-		  Cursor cursor = getContentResolver().query(uri, columnsToTake, null,
-		        null, null);
-		  try{
-			  if (cursor.moveToFirst()) {
-				  URL = cursor.getString(cursor.getColumnIndex(VideoListProvider.KEY_URL));
-			  }
-		  } finally{
-			  cursor.close();
-		  }
-		  return URL;
-	}
-	
-	public void showResultCount(){
-		String[] columnsToTake = { VideoListProvider.KEY_ROWID, VideoListProvider.KEY_KWORDS };
-		Cursor cursor = getContentResolver().query(VIDEOS_URI, columnsToTake, null,
-	  	        null, null);
-		try {
-		  int count = cursor.getCount();
-			if (count>0) {
-				cursor.moveToFirst();
-				String queryString = cursor.getString(cursor.getColumnIndex(VideoListProvider.KEY_KWORDS));
-		        String countString = getResources().getQuantityString(R.plurals.search_results,
-		                                count, new Object[] {count, queryString});
-				
-				Toast toast = Toast.makeText(this, countString, Toast.LENGTH_SHORT);
-				toast.show();
-			}
-		} finally {
-		  cursor.close();
-		}
-	}	
+    public String getVideoURL(long id){
+          String URL = "";
+          String[] columnsToTake = { VideoListProvider.KEY_ROWID, VideoListProvider.KEY_URL };
+          Uri uri = ContentUris.withAppendedId(VIDEOS_URI, id);
+          Cursor cursor = getContentResolver().query(uri, columnsToTake, null,
+                null, null);
+          try{
+              if (cursor.moveToFirst()) {
+                  URL = cursor.getString(cursor.getColumnIndex(VideoListProvider.KEY_URL));
+              }
+          } finally{
+              cursor.close();
+          }
+          return URL;
+    }
+    
+    public void showResultCount(){
+        String[] columnsToTake = { VideoListProvider.KEY_ROWID, VideoListProvider.KEY_KWORDS };
+        Cursor cursor = getContentResolver().query(VIDEOS_URI, columnsToTake, null,
+                  null, null);
+        try {
+          int count = cursor.getCount();
+            if (count>0) {
+                cursor.moveToFirst();
+                String queryString = cursor.getString(cursor.getColumnIndex(VideoListProvider.KEY_KWORDS));
+                String countString = getResources().getQuantityString(R.plurals.search_results,
+                                        count, new Object[] {count, queryString});
+                
+                Toast toast = Toast.makeText(this, countString, Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        } finally {
+          cursor.close();
+        }
+    }    
     
 }

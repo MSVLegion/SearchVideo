@@ -14,18 +14,18 @@ import android.content.Context;
 import android.os.Handler;
 
 public class YahooSearchModel extends SearchModel {
-	
-	private String searchServiceName = "yahoo";
+    
+    private String searchServiceName = "yahoo";
     private boolean failConnection = false;
-	
-	public YahooSearchModel(Handler handler, Context context) {
-		super(handler, context);
-	}
-	
-	@Override
-	public void getResults() throws URISyntaxException {
+    
+    public YahooSearchModel(Handler handler, Context context) {
+        super(handler, context);
+    }
+    
+    @Override
+    public void getResults() throws URISyntaxException {
 
-		    int skip = 0;
+            int skip = 0;
             String query = getQuery().trim();
 
             // String accountKey = "OuiQZ9Gzuj8Kj6TGsCIqf0FRt/Ke38TJTRJjyfeHxoo=";
@@ -86,6 +86,6 @@ public class YahooSearchModel extends SearchModel {
                     stepCompleted();
                 }
             }
-		searchCompleted();
-	}
+        searchCompleted();
+    }
 }

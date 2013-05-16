@@ -51,9 +51,9 @@ public abstract class SearchModel extends DefaultHandler {
 		this.guiHandler = guiHendler;
 	}
 
-    public void itemCompleted() {
-        getGuiHendler().sendEmptyMessage(Search.ITEM_COMPLETED);
-    }
+	public void itemCompleted() {
+		getGuiHendler().sendEmptyMessage(Search.ITEM_COMPLETED);
+	}
 	
 	public void stepCompleted() {
 		getGuiHendler().sendEmptyMessage(Search.STEP_COMPLETED);
@@ -73,30 +73,30 @@ public abstract class SearchModel extends DefaultHandler {
 	
 	protected void insertVideoLink(String keyWords, String url, String title, String website) {
 		// Defines a new Uri object that receives the result of the insertion
-    	Uri mNewUri;
-    	
-    	ContentValues initialValues = new ContentValues();
-        initialValues.put(VideoListProvider.KEY_KWORDS, keyWords);
-        initialValues.put(VideoListProvider.KEY_URL, url);
-        initialValues.put(VideoListProvider.KEY_TITLE, title);
-        initialValues.put(VideoListProvider.KEY_WEBSITE, website);
-        
-        mNewUri = getActivityContext().getContentResolver().insert(
-    		VideoListProvider.VIDEOS_CONTENT_URI,   // the user videos content URI
-    		initialValues                          // the values to insert
-    	);
+		Uri mNewUri;
+		
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(VideoListProvider.KEY_KWORDS, keyWords);
+		initialValues.put(VideoListProvider.KEY_URL, url);
+		initialValues.put(VideoListProvider.KEY_TITLE, title);
+		initialValues.put(VideoListProvider.KEY_WEBSITE, website);
+		
+		mNewUri = getActivityContext().getContentResolver().insert(
+			VideoListProvider.VIDEOS_CONTENT_URI,   // the user videos content URI
+			initialValues						  // the values to insert
+		);
 	}
 
-    public boolean checkInternetConn() {
-        Context context = getActivityContext();
-        ConnectivityManager conMgr =  (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo i = conMgr.getActiveNetworkInfo();
-        if (i == null)
-            return false;
-        if (!i.isConnected())
-            return false;
-        if (!i.isAvailable())
-            return false;
-        return true;
-    }
+	public boolean checkInternetConn() {
+		Context context = getActivityContext();
+		ConnectivityManager conMgr =  (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo i = conMgr.getActiveNetworkInfo();
+		if (i == null)
+			return false;
+		if (!i.isConnected())
+			return false;
+		if (!i.isAvailable())
+			return false;
+		return true;
+	}
 }

@@ -6,6 +6,7 @@
         <item name="android:windowBackground">@color/abs__background_holo_light</item>
         <item name="android:colorBackground">@color/abs__background_holo_light</item>
         <item name="windowContentOverlay">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
     <style name="ButtonText">
         <item name="android:layout_width">fill_parent</item>
